@@ -52,15 +52,15 @@ public class ForecastFragment extends Fragment {
         ListView listView = (ListView) getView().findViewById(R.id.listview_forecast);
         listView.setAdapter(forecastAdapter);
 
-        getForecastContent("http://api.openweathermap.org/data/2.5/forecast?id=2643743");
+        getForecastContent("http://api.openweathermap.org/data/2.5/forecast?id=2643743&APPID=0255b417a3301f51636044ad2151b9f8");
 
     }
 
     public String getForecastContent(String url) {
         String response = "";
         try {
-            URL encodedUrl = new URL("http://api.openweathermap.org/data/2.5/forecast?id=2643743");
-            //0255b417a3301f51636044ad2151b9f8
+            URL encodedUrl = new URL(url);
+            //&APPID=0255b417a3301f51636044ad2151b9f8
             UrlContentGetter getForecast = new UrlContentGetter();
             getForecast.execute(encodedUrl);
 
