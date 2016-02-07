@@ -1,14 +1,18 @@
 package com.myprojects.joaolebre.sunshine.app;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import com.myprojects.joaolebre.sunshine.data.UrlContentGetter;
+
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +20,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment {
+public class ForecastFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -26,10 +30,12 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
+    //This method is better to put things like getView()
+    //onCreateView() might run before other dependencies have been created
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        String[] weekForecastArray = new String[] {
+        String[] weekForecastArray = new String[]{
                 "Today - Sunny - 88/30",
                 "Tomorrow - Foggy - 70/46",
                 "Weds - Cloudy - 72/63",
@@ -45,5 +51,23 @@ public class MainActivityFragment extends Fragment {
 
         ListView listView = (ListView) getView().findViewById(R.id.listview_forecast);
         listView.setAdapter(forecastAdapter);
+
+        getForecastContent("http://api.openweathermap.org/data/2.5/forecast?id=2643743");
+
+    }
+
+    public String getForecastContent(String url) {
+        String response = "";
+        try {
+            URL encodedUrl = new URL("http://api.openweathermap.org/data/2.5/forecast?id=2643743");
+            //0255b417a3301f51636044ad2151b9f8
+            UrlContentGetter getForecast = new UrlContentGetter();
+            getForecast.execute(encodedUrl);
+
+        } catch (IOException ioException) {
+            Log.e("Placeholder Fragment", "malformed URL");
+        }
+
+        return response;
     }
 }
