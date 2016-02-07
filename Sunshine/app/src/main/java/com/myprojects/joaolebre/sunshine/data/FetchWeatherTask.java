@@ -1,17 +1,32 @@
 package com.myprojects.joaolebre.sunshine.data;
 
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.text.format.Time;
 import android.util.Log;
 
+import com.myprojects.joaolebre.sunshine.data.common.AsyncCaller;
 import com.myprojects.joaolebre.sunshine.data.common.UrlContentGetter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by joao.lebre on 07/02/2016.
  */
-public class FetchWeatherTask {
+public class FetchWeatherTask implements AsyncCaller{
+    private static final String CLASS_TAG = UrlContentGetter.class.getSimpleName();
+
+    private UrlContentGetter mGetForecast;
+    private String postCode;
+    private AsyncCaller delegate;
+    private String[] weeklyForecast;
+
     private final String PROTOCOL_URL = "http";
     private final String BASE_URL = "api.openweathermap.org";
     private final String DIRECTORY_URL = "data/2.5";
@@ -25,16 +40,30 @@ public class FetchWeatherTask {
     //These could potentially be modified by the user:
     private final String RESPONSE_FORMAT = "json";
     private final String RESPONSE_UNITS = "metric";
-    private final String RESPONSE_DAYS = "7";
+    private String RESPONSE_DAYS = "7";
+    private int numberOfDays;
     private final String APIKEY = "0255b417a3301f51636044ad2151b9f8"; //Stored somewhere else?
 
 
-    public FetchWeatherTask(){
+    public FetchWeatherTask(String postCode, int numberOfDays, AsyncCaller delegate){
+        this.postCode = postCode;
+        this.numberOfDays = numberOfDays;
+        this.RESPONSE_DAYS = Integer.toString(numberOfDays);
+        this.delegate = delegate;
     }
 
-    public String fetchDataByPostcode(String postCode, String country){
+    public void fetchData() {
+        fetchDataByPostcode(this.postCode);
+    }
+
+    public void fetchDataByPostcode(String postCode){
+        Uri.Builder urlBuilder = createUriPath(postCode);
+        getContentFromUrl(urlBuilder);
+    }
+
+    //URL and url get methods
+    private Uri.Builder createUriPath(String postCode) {
         Uri.Builder urlBuilder = new Uri.Builder();
-        UrlContentGetter getForecast = new UrlContentGetter();
 
         urlBuilder.scheme(PROTOCOL_URL)
                 .authority(BASE_URL)
@@ -47,14 +76,95 @@ public class FetchWeatherTask {
                 .appendQueryParameter(APIKEY_QUERY_PARAM, APIKEY)
                 .build();
 
+        return urlBuilder;
+    }
+
+    private void getContentFromUrl(Uri.Builder url) {
+        mGetForecast = new UrlContentGetter(this);
+
         try {
-            URL encodedUrl = new URL(urlBuilder.toString());
-            getForecast.execute(encodedUrl);
+            URL encodedUrl = new URL(url.toString());
+            mGetForecast.execute(encodedUrl);
 
         } catch (IOException ioException) {
             Log.e("FetchWeatherTask", "malformed URL");
         }
+    }
 
-        return "";
+    // JSON parser
+    private String[] getWeatherDataFromJson(String forecastJsonStr)
+            throws JSONException {
+        Log.v("This is JSON: ", forecastJsonStr);
+
+        final String OWM_LIST = "list";
+        final String OWM_WEATHER = "weather";
+        final String OWM_MAX = "temp_max";
+        final String OWM_MIN = "temp_min";
+        final String OWM_DESCRIPTION = "main";
+
+        JSONObject forecastJson = new JSONObject(forecastJsonStr);
+        JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
+
+        // Set current date (Julian days)
+        Time dayTime = new Time();
+        dayTime.setToNow();
+        int julianStartDay = Time.getJulianDay(System.currentTimeMillis(), dayTime.gmtoff);
+
+        // Reset timer so we can work in UTC from this point onwards
+        dayTime = new Time();
+
+        String[] resultStrs = new String[numberOfDays];
+        for(int i = 0; i < weatherArray.length(); i++) {
+            String day;
+            String description;
+            String highAndLow;
+
+            JSONObject dayForecast = weatherArray.getJSONObject(i);
+
+            long dateTime;
+            dateTime = dayTime.setJulianDay(julianStartDay+i);
+            day = getReadableDateString(dateTime);
+
+            JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
+            description = weatherObject.getString(OWM_DESCRIPTION);
+
+            JSONObject temperatureObject = dayForecast.getJSONObject(OWM_DESCRIPTION);
+            double high = temperatureObject.getDouble(OWM_MAX);
+            double low = temperatureObject.getDouble(OWM_MIN);
+
+            highAndLow = formatHighLows(high, low);
+            resultStrs[i] = day + " - " + description + " - " + highAndLow;
+        }
+
+        return resultStrs;
+    }
+
+
+    // Data formatting methods:
+    private String getReadableDateString(long time){
+        // API Unix timestamp -> Miliseconds
+        SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
+        return shortenedDateFormat.format(time);
+    }
+
+
+    private String formatHighLows(double high, double low) {
+        // For presentation purposes
+        long roundedHigh = Math.round(high);
+        long roundedLow = Math.round(low);
+
+        String highLowStr = roundedHigh + "/" + roundedLow;
+        return highLowStr;
+    }
+
+    // Delegate for Async UrlContentGetter
+    @Override
+    public void asyncProcessFinishedWithResult(Object result) {
+        try {
+            weeklyForecast = getWeatherDataFromJson((String)result);
+            delegate.asyncProcessFinishedWithResult(weeklyForecast);
+        } catch (JSONException e) {
+            Log.e("FetchWeatherTask", "Failed to parse JSON");
+        }
     }
 }

@@ -17,6 +17,12 @@ public class UrlContentGetter extends AsyncTask<URL, Void, String> {
 
     private static final String CLASS_TAG = UrlContentGetter.class.getSimpleName();
 
+    private AsyncCaller delegate = null;
+
+    public UrlContentGetter(AsyncCaller delegate) {
+        this.delegate = delegate;
+    }
+
     @Override
     protected String doInBackground(URL... params) {
         // These two need to be declared outside the try/catch
@@ -74,5 +80,10 @@ public class UrlContentGetter extends AsyncTask<URL, Void, String> {
         }
 
         return jsonStr;
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        delegate.asyncProcessFinishedWithResult(s);
     }
 }

@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.myprojects.joaolebre.sunshine.data.FetchWeatherTask;
+import com.myprojects.joaolebre.sunshine.data.common.AsyncCaller;
 import com.myprojects.joaolebre.sunshine.data.common.UrlContentGetter;
 
 import java.io.IOException;
@@ -24,7 +25,9 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ForecastFragment extends Fragment {
+public class ForecastFragment extends Fragment implements AsyncCaller {
+
+    public String[] weeklyForecast;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,27 +49,10 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
-    //This method is better to put things like getView()
-    //onCreateView() might run before other dependencies have been created
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        String[] weekForecastArray = new String[]{
-                "Today - Sunny - 88/30",
-                "Tomorrow - Foggy - 70/46",
-                "Weds - Cloudy - 72/63",
-                "Thurs - Rainy - 64/51",
-                "Fri - Foggy - 70/46",
-                "Sat - Sunny - 76/68"
-        };
-
-        List<String> weekForecastList = new ArrayList<String>(Arrays.asList(weekForecastArray));
-
-        ArrayAdapter<String> forecastAdapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.list_item_forecast, R.id.list_item_forecast_textview, weekForecastList);
-
-        ListView listView = (ListView) getView().findViewById(R.id.listview_forecast);
-        listView.setAdapter(forecastAdapter);
+        getWeatherData();
     }
 
     @Override
@@ -74,17 +60,33 @@ public class ForecastFragment extends Fragment {
 
         if (item.getItemId() == R.id.action_refresh)
         {
-            FetchWeatherTask weatherStation = new FetchWeatherTask();
-            weatherStation.fetchDataByPostcode("N113FQ","UK");
+            getWeatherData();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public String getForecastContent(String url) {
-        String response = "";
+    // Use FetchWeatherTask to populate the array
+    private void getWeatherData() {
+        FetchWeatherTask weatherStation = new FetchWeatherTask("N113FQ",6,this);
+        weatherStation.fetchData();
+    }
 
+    @Override
+    public void asyncProcessFinishedWithResult(Object result) {
+        weeklyForecast = (String[]) result;
+        Log.v("is null? ", weeklyForecast[0]);
+        if (weeklyForecast != null) updateArrayAdapterAndListView();
+    }
 
-        return response;
+    // Refresh ArrayAdapter
+    private void updateArrayAdapterAndListView(){
+        List<String> weekForecastList = new ArrayList<String>(Arrays.asList(weeklyForecast));
+
+        ArrayAdapter<String> forecastAdapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.list_item_forecast, R.id.list_item_forecast_textview, weekForecastList);
+
+        ListView listView = (ListView) getView().findViewById(R.id.listview_forecast);
+        listView.setAdapter(forecastAdapter);
     }
 }
