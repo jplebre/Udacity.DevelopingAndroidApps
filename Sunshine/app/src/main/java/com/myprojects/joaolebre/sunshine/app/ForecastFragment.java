@@ -4,12 +4,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.myprojects.joaolebre.sunshine.data.UrlContentGetter;
+import com.myprojects.joaolebre.sunshine.data.FetchWeatherTask;
+import com.myprojects.joaolebre.sunshine.data.common.UrlContentGetter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -21,6 +25,18 @@ import java.util.List;
  * A placeholder fragment containing a simple view.
  */
 public class ForecastFragment extends Fragment {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.forecastfragment, menu);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,22 +67,23 @@ public class ForecastFragment extends Fragment {
 
         ListView listView = (ListView) getView().findViewById(R.id.listview_forecast);
         listView.setAdapter(forecastAdapter);
+    }
 
-        getForecastContent("http://api.openweathermap.org/data/2.5/forecast?id=2643743&APPID=0255b417a3301f51636044ad2151b9f8");
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
+        if (item.getItemId() == R.id.action_refresh)
+        {
+            FetchWeatherTask weatherStation = new FetchWeatherTask();
+            weatherStation.fetchDataByPostcode("N113FQ","UK");
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public String getForecastContent(String url) {
         String response = "";
-        try {
-            URL encodedUrl = new URL(url);
-            //&APPID=0255b417a3301f51636044ad2151b9f8
-            UrlContentGetter getForecast = new UrlContentGetter();
-            getForecast.execute(encodedUrl);
 
-        } catch (IOException ioException) {
-            Log.e("Placeholder Fragment", "malformed URL");
-        }
 
         return response;
     }

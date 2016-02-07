@@ -1,4 +1,4 @@
-package com.myprojects.joaolebre.sunshine.data;
+package com.myprojects.joaolebre.sunshine.data.common;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -15,6 +15,8 @@ import java.net.URL;
  */
 public class UrlContentGetter extends AsyncTask<URL, Void, String> {
 
+    private static final String CLASS_TAG = UrlContentGetter.class.getSimpleName();
+
     @Override
     protected String doInBackground(URL... params) {
         // These two need to be declared outside the try/catch
@@ -22,7 +24,7 @@ public class UrlContentGetter extends AsyncTask<URL, Void, String> {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
 
-        String forecastJsonStr = null;
+        String jsonStr = null;
 
         try {
             // Create the request to url, and open the connection
@@ -50,7 +52,10 @@ public class UrlContentGetter extends AsyncTask<URL, Void, String> {
                 return null;
             }
 
-            forecastJsonStr = buffer.toString();
+            jsonStr = buffer.toString();
+
+            Log.v(CLASS_TAG, "URL JSON String: " + jsonStr);
+
         } catch (IOException e) {
             Log.e("UrlContentGetter", "Error on input connection stream ", e);
             return null;
@@ -68,6 +73,6 @@ public class UrlContentGetter extends AsyncTask<URL, Void, String> {
             }
         }
 
-        return forecastJsonStr;
+        return jsonStr;
     }
 }
