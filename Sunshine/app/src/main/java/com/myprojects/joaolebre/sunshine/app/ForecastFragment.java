@@ -27,7 +27,8 @@ import java.util.List;
  */
 public class ForecastFragment extends Fragment implements AsyncCaller {
 
-    public String[] weeklyForecast;
+    private String[] weeklyForecast;
+    private ArrayAdapter<String> forecastAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class ForecastFragment extends Fragment implements AsyncCaller {
         super.onActivityCreated(savedInstanceState);
 
         getWeatherData();
+
     }
 
     @Override
@@ -75,7 +77,6 @@ public class ForecastFragment extends Fragment implements AsyncCaller {
     @Override
     public void asyncProcessFinishedWithResult(Object result) {
         weeklyForecast = (String[]) result;
-        Log.v("is null? ", weeklyForecast[0]);
         if (weeklyForecast != null) updateArrayAdapterAndListView();
     }
 
@@ -83,10 +84,11 @@ public class ForecastFragment extends Fragment implements AsyncCaller {
     private void updateArrayAdapterAndListView(){
         List<String> weekForecastList = new ArrayList<String>(Arrays.asList(weeklyForecast));
 
-        ArrayAdapter<String> forecastAdapter = new ArrayAdapter<String>(getActivity(),
+        forecastAdapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.list_item_forecast, R.id.list_item_forecast_textview, weekForecastList);
-
         ListView listView = (ListView) getView().findViewById(R.id.listview_forecast);
         listView.setAdapter(forecastAdapter);
+
+        forecastAdapter.notifyDataSetChanged();
     }
 }

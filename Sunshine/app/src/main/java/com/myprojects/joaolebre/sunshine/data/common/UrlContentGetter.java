@@ -60,8 +60,6 @@ public class UrlContentGetter extends AsyncTask<URL, Void, String> {
 
             jsonStr = buffer.toString();
 
-            Log.v(CLASS_TAG, "URL JSON String: " + jsonStr);
-
         } catch (IOException e) {
             Log.e("UrlContentGetter", "Error on input connection stream ", e);
             return null;
