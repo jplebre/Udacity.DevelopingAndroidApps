@@ -1,9 +1,7 @@
 package com.myprojects.joaolebre.sunshine.app;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,14 +11,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.myprojects.joaolebre.sunshine.data.FetchWeatherTask;
 import com.myprojects.joaolebre.sunshine.data.common.AsyncCaller;
-import com.myprojects.joaolebre.sunshine.data.common.UrlContentGetter;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +22,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class ForecastFragment extends Fragment implements AsyncCaller {
+public class HomeForecastListFragment extends Fragment implements AsyncCaller {
 
     private String[] weeklyForecast;
     private ArrayAdapter<String> forecastAdapter;
@@ -43,32 +37,36 @@ public class ForecastFragment extends Fragment implements AsyncCaller {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.forecastfragment, menu);
+        inflater.inflate(R.menu.menu_fragment_home_forecast, menu);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        return inflater.inflate(R.layout.fragment_home_forecast, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         forecastListView = (ListView) getView().findViewById(R.id.listview_forecast);
+
         forecastListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                CharSequence text = parent.getItemAtPosition(position).toString();
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), text, duration);
-                toast.show();
+                doOnItemClick(parent, view, position, id);
             }
         });
-        getWeatherData();
 
+        getWeatherData();
+    }
+
+    private void doOnItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        String message = parent.getItemAtPosition(position).toString();
+//        Intent intent = new Intent(getActivity(), DailyForecastDetailActivity.class);
+//        intent.putExtra(Intent.EXTRA_TEXT, message);
+//        startActivity(intent);
     }
 
     @Override
@@ -99,7 +97,7 @@ public class ForecastFragment extends Fragment implements AsyncCaller {
         List<String> weekForecastList = new ArrayList<String>(Arrays.asList(weeklyForecast));
 
         forecastAdapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.list_item_forecast, R.id.list_item_forecast_textview, weekForecastList);
+                R.layout.list_item_home_forecast, R.id.list_item_forecast_textview, weekForecastList);
         forecastListView.setAdapter(forecastAdapter);
 
         forecastAdapter.notifyDataSetChanged();
