@@ -1,5 +1,6 @@
 package com.myprojects.joaolebre.sunshine.app;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -9,8 +10,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.myprojects.joaolebre.sunshine.data.FetchWeatherTask;
 import com.myprojects.joaolebre.sunshine.data.common.AsyncCaller;
@@ -29,6 +32,7 @@ public class ForecastFragment extends Fragment implements AsyncCaller {
 
     private String[] weeklyForecast;
     private ArrayAdapter<String> forecastAdapter;
+    private ListView forecastListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +56,17 @@ public class ForecastFragment extends Fragment implements AsyncCaller {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        forecastListView = (ListView) getView().findViewById(R.id.listview_forecast);
+        forecastListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CharSequence text = parent.getItemAtPosition(position).toString();
+                int duration = Toast.LENGTH_SHORT;
 
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), text, duration);
+                toast.show();
+            }
+        });
         getWeatherData();
 
     }
@@ -86,8 +100,7 @@ public class ForecastFragment extends Fragment implements AsyncCaller {
 
         forecastAdapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.list_item_forecast, R.id.list_item_forecast_textview, weekForecastList);
-        ListView listView = (ListView) getView().findViewById(R.id.listview_forecast);
-        listView.setAdapter(forecastAdapter);
+        forecastListView.setAdapter(forecastAdapter);
 
         forecastAdapter.notifyDataSetChanged();
     }
