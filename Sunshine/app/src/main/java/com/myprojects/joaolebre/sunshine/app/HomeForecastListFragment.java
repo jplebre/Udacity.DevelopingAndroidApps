@@ -1,5 +1,6 @@
 package com.myprojects.joaolebre.sunshine.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -50,7 +51,7 @@ public class HomeForecastListFragment extends Fragment implements AsyncCaller {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        forecastListView = (ListView) getView().findViewById(R.id.listview_forecast);
+        forecastListView = (ListView) getView().findViewById(R.id.list_view_forecast);
 
         forecastListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -63,10 +64,10 @@ public class HomeForecastListFragment extends Fragment implements AsyncCaller {
     }
 
     private void doOnItemClick(AdapterView<?> parent, View view, int position, long id) {
-//        String message = parent.getItemAtPosition(position).toString();
-//        Intent intent = new Intent(getActivity(), DailyForecastDetailActivity.class);
-//        intent.putExtra(Intent.EXTRA_TEXT, message);
-//        startActivity(intent);
+        String message = parent.getItemAtPosition(position).toString();
+        Intent intent = new Intent(getActivity(), ForecastDetailActivity.class);
+        intent.putExtra(Intent.EXTRA_TEXT, message);
+        startActivity(intent);
     }
 
     @Override
