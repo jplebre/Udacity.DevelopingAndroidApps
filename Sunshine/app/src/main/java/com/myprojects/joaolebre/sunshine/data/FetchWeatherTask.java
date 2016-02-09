@@ -1,7 +1,6 @@
 package com.myprojects.joaolebre.sunshine.data;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -19,7 +18,7 @@ import java.text.SimpleDateFormat;
 /**
  * Created by joao.lebre on 07/02/2016.
  */
-public class FetchWeatherTask implements AsyncCaller{
+public class FetchWeatherTask implements AsyncCaller {
     private static final String CLASS_TAG = UrlContentGetter.class.getSimpleName();
 
     private UrlContentGetter mGetForecast;
@@ -45,18 +44,19 @@ public class FetchWeatherTask implements AsyncCaller{
     private final String APIKEY = "0255b417a3301f51636044ad2151b9f8"; //Stored somewhere else?
 
 
-    public FetchWeatherTask(String postCode, int numberOfDays, AsyncCaller delegate){
+    public FetchWeatherTask(String postCode, int numberOfDays, AsyncCaller delegate) {
         this.postCode = postCode;
         this.numberOfDays = numberOfDays;
         this.RESPONSE_DAYS = Integer.toString(numberOfDays);
         this.delegate = delegate;
+
     }
 
     public void fetchData() {
         fetchDataByPostcode(this.postCode);
     }
 
-    public void fetchDataByPostcode(String postCode){
+    public void fetchDataByPostcode(String postCode) {
         Uri.Builder urlBuilder = createUriPath(postCode);
         getContentFromUrl(urlBuilder);
     }
@@ -114,7 +114,7 @@ public class FetchWeatherTask implements AsyncCaller{
         dayTime = new Time();
 
         String[] resultStrs = new String[numberOfDays];
-        for(int i = 0; i < weatherArray.length(); i++) {
+        for (int i = 0; i < weatherArray.length(); i++) {
             String day;
             String description;
             String highAndLow;
@@ -122,7 +122,7 @@ public class FetchWeatherTask implements AsyncCaller{
             JSONObject dayForecast = weatherArray.getJSONObject(i);
 
             long dateTime;
-            dateTime = dayTime.setJulianDay(julianStartDay+i);
+            dateTime = dayTime.setJulianDay(julianStartDay + i);
             day = getReadableDateString(dateTime);
 
             JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
@@ -141,7 +141,7 @@ public class FetchWeatherTask implements AsyncCaller{
 
 
     // Data formatting methods:
-    private String getReadableDateString(long time){
+    private String getReadableDateString(long time) {
         // API Unix timestamp -> Miliseconds
         SimpleDateFormat shortenedDateFormat = new SimpleDateFormat("EEE MMM dd");
         return shortenedDateFormat.format(time);
@@ -161,7 +161,7 @@ public class FetchWeatherTask implements AsyncCaller{
     @Override
     public void asyncProcessFinishedWithResult(Object result) {
         try {
-            weeklyForecast = getWeatherDataFromJson((String)result);
+            weeklyForecast = getWeatherDataFromJson((String) result);
             delegate.asyncProcessFinishedWithResult(weeklyForecast);
         } catch (JSONException e) {
             Log.e("FetchWeatherTask", "Failed to parse JSON");

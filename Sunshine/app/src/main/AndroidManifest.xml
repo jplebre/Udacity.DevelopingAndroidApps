@@ -20,6 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <!-- <meta-data android:name="OpenWeatherMapAPIKEY"
+                   android:value="0255b417a3301f51636044ad2151b9f8" />
+                   -->
     </application>
 
 </manifest>
