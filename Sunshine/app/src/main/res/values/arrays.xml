@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="preference_temperature_units_list">
+        <item>@string/preference_temperature_units_label_metric</item>
+        <item>@string/preference_temperature_units_label_imperial</item>
+    </string-array>
+
+    <string-array name="preference_temperature_units_list_value">
+        <item>@string/preference_temperature_units_value_metric</item>
+        <item>@string/preference_temperature_units_value_imperial</item>
+    </string-array>
+</resources>

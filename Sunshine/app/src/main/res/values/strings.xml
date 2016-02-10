@@ -20,4 +20,5 @@
     <string name="preference_temperature_units_label_imperial">Imperial</string>
     <string name="preference_temperature_units_value_metric">0</string>
     <string name="preference_temperature_units_value_imperial">1</string>
+    <string name="action_map">Show On Map</string>
 </resources>
