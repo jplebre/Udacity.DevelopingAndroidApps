@@ -67,11 +67,15 @@ public class HomeForecastActivity extends AppCompatActivity {
                 getString(R.string.preference_location_key),
                 getString(R.string.preference_location_default));
 
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse("geo:0,0?q="+postCode));
-            if (intent.resolveActivity(getPackageManager()) != null) {
-                startActivity(intent);
-            }
+        Uri geoLocation= Uri.parse("geo:0,0?").buildUpon()
+                .appendQueryParameter("q", postCode)
+                .build();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geoLocation);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
 
     }
 
