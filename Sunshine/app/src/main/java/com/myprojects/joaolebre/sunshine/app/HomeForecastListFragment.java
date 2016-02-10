@@ -1,7 +1,9 @@
 package com.myprojects.joaolebre.sunshine.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,9 +27,9 @@ import java.util.List;
  */
 public class HomeForecastListFragment extends Fragment implements AsyncCaller {
 
-    private String[] weeklyForecast;
-    private ArrayAdapter<String> forecastAdapter;
-    private ListView forecastListView;
+    private String[] mWeeklyforecast;
+    private ArrayAdapter<String> mForecastAdapter;
+    private ListView mForecastListVieworecastListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,16 +53,28 @@ public class HomeForecastListFragment extends Fragment implements AsyncCaller {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        forecastListView = (ListView) getView().findViewById(R.id.list_view_forecast);
 
-        forecastListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        setupListViewAndAdapter();
+        getWeatherData();
+    }
+
+    private void setupListViewAndAdapter() {
+        mForecastAdapter = new ArrayAdapter<String>(
+                getActivity(),
+                R.layout.list_item_home_forecast,
+                R.id.list_item_forecast_textview,
+                new ArrayList<String>());
+
+        mForecastListVieworecastListView = (ListView) getView().findViewById(R.id.list_view_forecast);
+
+        mForecastListVieworecastListView.setAdapter(mForecastAdapter);
+
+        mForecastListVieworecastListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 doOnItemClick(parent, view, position, id);
             }
         });
-
-        getWeatherData();
     }
 
     private void doOnItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -72,7 +86,6 @@ public class HomeForecastListFragment extends Fragment implements AsyncCaller {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.action_refresh:
                 getWeatherData();
@@ -85,24 +98,27 @@ public class HomeForecastListFragment extends Fragment implements AsyncCaller {
 
     // Use FetchWeatherTask to populate the array
     private void getWeatherData() {
-        FetchWeatherTask weatherStation = new FetchWeatherTask("N113FQ",6,this);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String locationPreferences = sharedPreferences.getString(
+                getString(R.string.preference_location_key),
+                getString(R.string.preference_location_default));
+        FetchWeatherTask weatherStation = new FetchWeatherTask(locationPreferences,6,this);
         weatherStation.fetchData();
     }
 
     @Override
     public void asyncProcessFinishedWithResult(Object result) {
-        weeklyForecast = (String[]) result;
-        if (weeklyForecast != null) updateArrayAdapterAndListView();
+        mWeeklyforecast = (String[]) result;
+        if (mWeeklyforecast != null) updateArrayAdapterAndListView();
     }
 
     // Refresh ArrayAdapter
     private void updateArrayAdapterAndListView(){
-        List<String> weekForecastList = new ArrayList<String>(Arrays.asList(weeklyForecast));
+        List<String> weekForecastList = new ArrayList<String>(Arrays.asList(mWeeklyforecast));
+        mForecastAdapter.clear();
+        mForecastAdapter.addAll(mWeeklyforecast);
 
-        forecastAdapter = new ArrayAdapter<String>(getActivity(),
-                R.layout.list_item_home_forecast, R.id.list_item_forecast_textview, weekForecastList);
-        forecastListView.setAdapter(forecastAdapter);
 
-        forecastAdapter.notifyDataSetChanged();
+        mForecastAdapter.notifyDataSetChanged();
     }
 }
