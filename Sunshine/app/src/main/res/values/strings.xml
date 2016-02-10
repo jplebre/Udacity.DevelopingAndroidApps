@@ -13,4 +13,11 @@
     <string name="preference_location_title">Location</string>
     <string name="preference_location_key" translatable="false">location</string>
     <string name="preference_location_default" translatable="false">94043</string>
+    <string name="preference_temperature_units_title">Temperature Units</string>
+    <string name="preference_temperature_units_key" translatable="false">temperatureUnit</string>
+    <string name="preference_temperature_units_default" translatable="false">1</string>
+    <string name="preference_temperature_units_label_metric">Metric</string>
+    <string name="preference_temperature_units_label_imperial">Imperial</string>
+    <string name="preference_temperature_units_value_metric">0</string>
+    <string name="preference_temperature_units_value_imperial">1</string>
 </resources>

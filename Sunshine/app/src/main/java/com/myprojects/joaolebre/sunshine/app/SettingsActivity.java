@@ -19,6 +19,7 @@ public class SettingsActivity extends PreferenceActivity
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
         // updated when the preference changes.
         bindPreferenceSummaryToValue(findPreference(getString(R.string.preference_location_key)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.preference_temperature_units_key)));
     }
 
     /**

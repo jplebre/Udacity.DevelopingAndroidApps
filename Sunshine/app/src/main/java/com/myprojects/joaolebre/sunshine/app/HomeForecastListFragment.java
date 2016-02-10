@@ -19,17 +19,15 @@ import com.myprojects.joaolebre.sunshine.data.FetchWeatherTask;
 import com.myprojects.joaolebre.sunshine.data.common.AsyncCaller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class HomeForecastListFragment extends Fragment implements AsyncCaller {
+public class HomeForecastListFragment extends Fragment {
 
-    private String[] mWeeklyforecast;
+    private String[] mWeeklyForecast;
     private ArrayAdapter<String> mForecastAdapter;
-    private ListView mForecastListVieworecastListView;
+    private ListView mForecastListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +49,12 @@ public class HomeForecastListFragment extends Fragment implements AsyncCaller {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getWeatherData();
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -65,11 +69,11 @@ public class HomeForecastListFragment extends Fragment implements AsyncCaller {
                 R.id.list_item_forecast_textview,
                 new ArrayList<String>());
 
-        mForecastListVieworecastListView = (ListView) getView().findViewById(R.id.list_view_forecast);
+        mForecastListView = (ListView) getView().findViewById(R.id.list_view_forecast);
 
-        mForecastListVieworecastListView.setAdapter(mForecastAdapter);
+        mForecastListView.setAdapter(mForecastAdapter);
 
-        mForecastListVieworecastListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mForecastListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 doOnItemClick(parent, view, position, id);
@@ -106,18 +110,15 @@ public class HomeForecastListFragment extends Fragment implements AsyncCaller {
         weatherStation.fetchData();
     }
 
-    @Override
-    public void asyncProcessFinishedWithResult(Object result) {
-        mWeeklyforecast = (String[]) result;
-        if (mWeeklyforecast != null) updateArrayAdapterAndListView();
+    public void updateWeeklyForecast(String[] forecast) {
+        mWeeklyForecast = (String[]) forecast;
+        if (mWeeklyForecast != null) updateArrayAdapterAndListView();
     }
 
     // Refresh ArrayAdapter
     private void updateArrayAdapterAndListView(){
-        List<String> weekForecastList = new ArrayList<String>(Arrays.asList(mWeeklyforecast));
         mForecastAdapter.clear();
-        mForecastAdapter.addAll(mWeeklyforecast);
-
+        mForecastAdapter.addAll(mWeeklyForecast);
 
         mForecastAdapter.notifyDataSetChanged();
     }

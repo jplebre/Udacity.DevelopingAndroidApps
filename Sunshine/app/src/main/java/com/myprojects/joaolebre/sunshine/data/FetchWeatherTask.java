@@ -1,9 +1,17 @@
 package com.myprojects.joaolebre.sunshine.data;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.text.format.Time;
 import android.util.Log;
+import android.widget.ListView;
 
+import com.myprojects.joaolebre.sunshine.app.HomeForecastListFragment;
+import com.myprojects.joaolebre.sunshine.app.R;
 import com.myprojects.joaolebre.sunshine.data.common.AsyncCaller;
 import com.myprojects.joaolebre.sunshine.data.common.UrlContentGetter;
 
@@ -23,7 +31,7 @@ public class FetchWeatherTask implements AsyncCaller {
 
     private UrlContentGetter mGetForecast;
     private String postCode;
-    private AsyncCaller delegate;
+    private HomeForecastListFragment fragment;
     private String[] weeklyForecast;
 
     private final String PROTOCOL_URL = "http";
@@ -44,11 +52,11 @@ public class FetchWeatherTask implements AsyncCaller {
     private final String APIKEY = "0255b417a3301f51636044ad2151b9f8"; //Stored somewhere else?
 
 
-    public FetchWeatherTask(String postCode, int numberOfDays, AsyncCaller delegate) {
+    public FetchWeatherTask(String postCode, int numberOfDays, Object fragment) {
         this.postCode = postCode;
         this.numberOfDays = numberOfDays;
         this.RESPONSE_DAYS = Integer.toString(numberOfDays);
-        this.delegate = delegate;
+        this.fragment = (HomeForecastListFragment)fragment;
 
     }
 
@@ -149,7 +157,19 @@ public class FetchWeatherTask implements AsyncCaller {
 
 
     private String formatHighLows(double high, double low) {
-        // For presentation purposes
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(fragment.getActivity());
+        String unitPreference = sharedPreferences.getString(
+                fragment.getString(R.string.preference_temperature_units_key),
+                fragment.getString(R.string.preference_temperature_units_default)
+        );
+
+        if (unitPreference.equals(fragment.getString(R.string.preference_temperature_units_value_imperial))) {
+            high = (high * 1.8) + 32;
+            low = (low * 1.8) + 32;
+        } else if (!unitPreference.equals(fragment.getString(R.string.preference_temperature_units_value_metric))) {
+            Log.d(CLASS_TAG, "Unit type not found: " + unitPreference);
+        }
+
         long roundedHigh = Math.round(high);
         long roundedLow = Math.round(low);
 
@@ -162,7 +182,7 @@ public class FetchWeatherTask implements AsyncCaller {
     public void asyncProcessFinishedWithResult(Object result) {
         try {
             weeklyForecast = getWeatherDataFromJson((String) result);
-            delegate.asyncProcessFinishedWithResult(weeklyForecast);
+            fragment.updateWeeklyForecast(weeklyForecast);
         } catch (JSONException e) {
             Log.e("FetchWeatherTask", "Failed to parse JSON");
         }
