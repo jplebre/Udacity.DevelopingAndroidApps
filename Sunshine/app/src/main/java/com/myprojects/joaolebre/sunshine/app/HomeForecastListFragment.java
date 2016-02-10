@@ -73,12 +73,14 @@ public class HomeForecastListFragment extends Fragment implements AsyncCaller {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.action_refresh)
-        {
-            getWeatherData();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                getWeatherData();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
         }
-        return super.onOptionsItemSelected(item);
     }
 
     // Use FetchWeatherTask to populate the array
