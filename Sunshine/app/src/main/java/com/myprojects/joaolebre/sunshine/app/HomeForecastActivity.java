@@ -52,16 +52,15 @@ public class HomeForecastActivity extends AppCompatActivity {
             case R.id.action_settings:
                 startSettingsActivity();
                 return true;
-            case R.id.action_map:
-                sendMapIntent();
+            case R.id.action_show_on_map:
+                createShowOnMapIntent();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
 
-    private void sendMapIntent() {
+    private void createShowOnMapIntent() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String postCode = sharedPreferences.getString(
                 getString(R.string.preference_location_key),
