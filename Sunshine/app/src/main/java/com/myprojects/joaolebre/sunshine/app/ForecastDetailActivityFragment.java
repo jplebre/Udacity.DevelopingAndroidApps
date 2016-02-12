@@ -80,10 +80,6 @@ public class ForecastDetailActivityFragment extends Fragment {
             case R.id.action_show_on_map:
                 createShowOnMapIntent();
                 return true;
-//            case R.id.action_share:
-//                Toast.makeText(getContext(),"hey I'm sharing", Toast.LENGTH_SHORT);
-//                createShareIntent();
-//                return true;
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -98,12 +94,6 @@ public class ForecastDetailActivityFragment extends Fragment {
                 mForecastDetail + " " + getActivity().getString(R.string.social_share_hashtag));
         return intent;
     }
-
-//    private void setShareIntent(Intent shareIntent) {
-//        if (mShareActionProvider != null) {
-//            mShareActionProvider.setShareIntent(shareIntent);
-//        }
-//    }
 
     private void createShowOnMapIntent() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
