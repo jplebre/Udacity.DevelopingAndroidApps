@@ -46,6 +46,10 @@
                 android:value="com.myprojects.joaolebre.sunshine.app.HomeForecastActivity" />
         </activity>
 
+        <provider
+            android:authorities="com.myprojects.joaolebre.sunshine"
+            android:name="com.myprojects.joaolebre.sunshine.data.WeatherProvider" />
+
     </application>
 
 </manifest>
