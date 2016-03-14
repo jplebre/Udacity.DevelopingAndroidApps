@@ -4,11 +4,9 @@ import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.ShareActionProvider;
@@ -22,9 +20,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.myprojects.joaolebre.sunshine.common.Utility;
-import com.myprojects.joaolebre.sunshine.data.WeatherContract;
 import com.myprojects.joaolebre.sunshine.data.WeatherContract.WeatherEntry;
-
 
 
 public class ForecastDetailActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {

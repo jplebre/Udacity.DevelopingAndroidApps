@@ -4,11 +4,9 @@ import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,15 +15,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.myprojects.joaolebre.sunshine.common.Utility;
 import com.myprojects.joaolebre.sunshine.data.FetchWeatherTask;
 import com.myprojects.joaolebre.sunshine.data.WeatherContract;
-import com.myprojects.joaolebre.sunshine.data.common.AsyncCaller;
-
-import java.util.ArrayList;
 
 
 public class HomeForecastListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
