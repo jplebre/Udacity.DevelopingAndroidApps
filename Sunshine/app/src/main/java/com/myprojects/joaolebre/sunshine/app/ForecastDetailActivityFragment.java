@@ -129,10 +129,7 @@ public class ForecastDetailActivityFragment extends Fragment implements LoaderMa
     }
 
     private void createShowOnMapIntent() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String postCode = sharedPreferences.getString(
-                getString(R.string.preference_location_key),
-                getString(R.string.preference_location_default));
+        String postCode = Utility.getPreferredLocation(getActivity());
 
         Uri geoLocation= Uri.parse("geo:0,0?").buildUpon()
                 .appendQueryParameter("q", postCode)
@@ -140,8 +137,11 @@ public class ForecastDetailActivityFragment extends Fragment implements LoaderMa
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(geoLocation);
+
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivity(intent);
+        } else {
+            Log.d(CLASS_TAG, "Couldn't call " + postCode + ", no receiving apps installed!");
         }
 
     }

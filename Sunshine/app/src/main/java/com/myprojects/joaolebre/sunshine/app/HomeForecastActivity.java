@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,6 +13,7 @@ import com.myprojects.joaolebre.sunshine.common.Utility;
 
 public class HomeForecastActivity extends AppCompatActivity {
 
+    private static final String CLASS_TAG = HomeForecastActivity.class.getSimpleName();
     private String mLocation;
 
     @Override
@@ -76,8 +78,11 @@ public class HomeForecastActivity extends AppCompatActivity {
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(geoLocation);
+
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
+        } else {
+            Log.d(CLASS_TAG, "Couldn't call " + postCode + ", no receiving apps installed!");
         }
 
     }
