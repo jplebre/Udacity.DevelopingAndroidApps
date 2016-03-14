@@ -115,10 +115,15 @@ public class HomeForecastListFragment extends Fragment implements LoaderManager.
     }
 
     private void doOnItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String message = parent.getItemAtPosition(position).toString();
-        Intent intent = new Intent(getActivity(), ForecastDetailActivity.class);
-        intent.putExtra(Intent.EXTRA_TEXT, message);
-        startActivity(intent);
+        Cursor cursor = (Cursor) parent.getItemAtPosition(position);
+        if (cursor != null) {
+            String locationSetting = Utility.getPreferredLocation(getActivity());
+            Intent intent = new Intent(getActivity(), ForecastDetailActivity.class)
+                    .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                            locationSetting, cursor.getLong(COL_WEATHER_DATE)
+                    ));
+            startActivity(intent);
+        }
     }
 
     @Override
