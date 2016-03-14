@@ -93,6 +93,9 @@ public class HomeForecastListFragment extends Fragment implements LoaderManager.
     }
 
     private void setupListViewAndAdapter() {
+
+        mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
+
         mForecastListView = (ListView) getView().findViewById(R.id.list_view_forecast);
 
         mForecastListView.setAdapter(mForecastAdapter);

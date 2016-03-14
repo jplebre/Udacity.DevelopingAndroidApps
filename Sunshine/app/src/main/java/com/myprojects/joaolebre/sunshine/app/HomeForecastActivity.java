@@ -31,7 +31,7 @@ public class HomeForecastActivity extends AppCompatActivity {
         String location = Utility.getPreferredLocation( this );
 
         if (location != null && !location.equals(mLocation)) {
-            HomeForecastListFragment ff = getFragmentManager().findFragmentById(R.id.pageview)
+            HomeForecastListFragment ff = (HomeForecastListFragment) getFragmentManager().findFragmentById(R.id.fragment_list);
 
             if ( null != ff ) {
                 ff.onLocationChanged();
