@@ -6,8 +6,6 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.myprojects.joaolebre.sunshine.common.Utility;
 
@@ -32,7 +30,6 @@ public class ForecastListAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        // Choose the layout type
         int viewType = getItemViewType(cursor.getPosition());
         int layoutId = -1;
 
@@ -53,25 +50,25 @@ public class ForecastListAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ForecastListViewHolder viewHolder = (ForecastListViewHolder)view.getTag();
 
-        // Read Icon ID (placeholder for now
+        // Read Icon ID (placeholder for now)
         viewHolder.iconView.setImageResource(R.mipmap.ic_launcher);
 
-        // Read Date from cursor
+        // Read Date
         String date = Utility.getFriendlyDayString(context, cursor.getLong(HomeForecastListFragment.COL_WEATHER_DATE));
         viewHolder.dateView.setText(date);
 
-        // Read forecast from cursor
+        // Read forecast
         String forecastDescription = cursor.getString(HomeForecastListFragment.COL_WEATHER_DESC);
         viewHolder.descriptionView.setText(forecastDescription);
 
         // Read user preference for metric or imperial temperature units
         boolean isMetric = Utility.isMetric(context);
 
-        // Read high temperature from cursor
+        // Read high temperature
         double high = cursor.getDouble(HomeForecastListFragment.COL_WEATHER_MAX_TEMP);
         viewHolder.highTempView.setText(Utility.formatTemperature(context, high, isMetric));
 
-        // Low temperature from cursor
+        // Low temperature
         double low = cursor.getDouble(HomeForecastListFragment.COL_WEATHER_MIN_TEMP);
         viewHolder.lowTempView.setText(Utility.formatTemperature(context, low, isMetric));
     }
