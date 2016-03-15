@@ -81,6 +81,7 @@ public class HomeForecastListFragment extends Fragment implements LoaderManager.
 
         super.onActivityCreated(savedInstanceState);
 
+        setHasOptionsMenu(true);
         setupListViewAndAdapter();
         getWeatherData();
     }

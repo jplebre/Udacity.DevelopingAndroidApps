@@ -15,6 +15,7 @@ public class HomeForecastActivity extends AppCompatActivity {
 
     private static final String CLASS_TAG = HomeForecastActivity.class.getSimpleName();
     private String mLocation;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +23,26 @@ public class HomeForecastActivity extends AppCompatActivity {
         mLocation = Utility.getPreferredLocation( this );
 
         setContentView(R.layout.activity_home_forecast);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        if (findViewById(R.id.weather_detail_container) != null) {
+            // The detail container view will be present only in the large-screen layouts
+            // (res/layout-sw600dp). If this view is present, then the activity should be
+            // in two-pane mode.
+            mTwoPane = true;
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a
+            // fragment transaction.
+            if (savedInstanceState == null) {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.weather_detail_container, new ForecastDetailActivityFragment())
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
+        }
+
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -33,7 +52,7 @@ public class HomeForecastActivity extends AppCompatActivity {
         String location = Utility.getPreferredLocation( this );
 
         if (location != null && !location.equals(mLocation)) {
-            HomeForecastListFragment ff = (HomeForecastListFragment) getFragmentManager().findFragmentById(R.id.fragment_list);
+            HomeForecastListFragment ff = (HomeForecastListFragment) getFragmentManager().findFragmentById(R.id.fragment_forecast);
 
             if ( null != ff ) {
                 ff.onLocationChanged();
