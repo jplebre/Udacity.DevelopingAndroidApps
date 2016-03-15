@@ -47,7 +47,7 @@ public class HomeForecastListFragment extends Fragment implements LoaderManager.
     static final int COL_COORD_LONG = 8;
 
     private String[] mWeeklyForecast;
-    private ForecastAdapter mForecastAdapter;
+    private ForecastListAdapter mForecastAdapter;
     private ListView mForecastListView;
     private LoaderManager mLoaderManager;
     private LoaderManager.LoaderCallbacks<Cursor> mLoaderCallbacks;
@@ -88,7 +88,7 @@ public class HomeForecastListFragment extends Fragment implements LoaderManager.
 
     private void setupListViewAndAdapter() {
 
-        mForecastAdapter = new ForecastAdapter(getActivity(), null, 0);
+        mForecastAdapter = new ForecastListAdapter(getActivity(), null, 0);
 
         mForecastListView = (ListView) getView().findViewById(R.id.list_view_forecast);
 

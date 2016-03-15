@@ -11,12 +11,12 @@ import android.widget.TextView;
 
 import com.myprojects.joaolebre.sunshine.common.Utility;
 
-public class ForecastAdapter extends CursorAdapter {
+public class ForecastListAdapter extends CursorAdapter {
     private static final int VIEW_TYPE_TODAY = 0;
     private static final int VIEW_TYPE_FUTURE_DAY = 1;
     private static final int VIEW_TYPE_COUNT = 2;
 
-    public ForecastAdapter(Context context, Cursor c, int flags) {
+    public ForecastListAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
 
@@ -41,39 +41,38 @@ public class ForecastAdapter extends CursorAdapter {
         } else if (viewType == VIEW_TYPE_FUTURE_DAY) {
             layoutId = R.layout.list_item_home_forecast;
         }
-        return LayoutInflater.from(context).inflate(layoutId, parent, false);
+
+        View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
+        ForecastListViewHolder viewHolder = new ForecastListViewHolder(view);
+        view.setTag(viewHolder);
+
+        return view;
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        ForecastListViewHolder viewHolder = (ForecastListViewHolder)view.getTag();
+
         // Read Icon ID (placeholder for now
-        int weatherId = cursor.getInt(HomeForecastListFragment.COL_WEATHER_ID);
-        ImageView iconView = (ImageView) view.findViewById(R.id.list_item_icon);
-        iconView.setImageResource(R.mipmap.ic_launcher);
+        viewHolder.iconView.setImageResource(R.mipmap.ic_launcher);
 
         // Read Date from cursor
         String date = Utility.getFriendlyDayString(context, cursor.getLong(HomeForecastListFragment.COL_WEATHER_DATE));
-        TextView dateView = (TextView) view.findViewById(R.id.list_item_date_textview);
-        dateView.setText(date);
+        viewHolder.dateView.setText(date);
 
         // Read forecast from cursor
-        String forecast = cursor.getString(HomeForecastListFragment.COL_WEATHER_DESC);
-        TextView forecastView = (TextView) view.findViewById(R.id.list_item_forecast_textview);
-        forecastView.setText(forecast);
+        String forecastDescription = cursor.getString(HomeForecastListFragment.COL_WEATHER_DESC);
+        viewHolder.descriptionView.setText(forecastDescription);
 
         // Read user preference for metric or imperial temperature units
         boolean isMetric = Utility.isMetric(context);
 
         // Read high temperature from cursor
         double high = cursor.getDouble(HomeForecastListFragment.COL_WEATHER_MAX_TEMP);
-
-        TextView highView = (TextView) view.findViewById(R.id.list_item_high_textview);
-        highView.setText(Utility.formatTemperature(high, isMetric));
+        viewHolder.highTempView.setText(Utility.formatTemperature(context, high, isMetric));
 
         // Low temperature from cursor
         double low = cursor.getDouble(HomeForecastListFragment.COL_WEATHER_MIN_TEMP);
-
-        TextView minView = (TextView) view.findViewById(R.id.list_item_low_textview);
-        minView.setText(Utility.formatTemperature(low, isMetric));
+        viewHolder.lowTempView.setText(Utility.formatTemperature(context, low, isMetric));
     }
 }
