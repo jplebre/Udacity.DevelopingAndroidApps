@@ -179,7 +179,7 @@ public class ForecastDetailActivityFragment extends Fragment implements LoaderMa
 
         if (data != null && data.moveToFirst()) {
             int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
-            viewHolder.iconView.setImageResource(R.mipmap.ic_launcher);
+            viewHolder.iconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
             // Read date
             long date = data.getLong(COL_WEATHER_DATE);
