@@ -1,15 +1,12 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            tools:context="com.myprojects.joaolebre.sunshine.app.ForecastDetailActivityFragment"
-            tools:showIn="@layout/activity_forecast_detail">
+            android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
         <TextView
             android:id="@+id/forecast_detail_fragment_item_day_textview"
@@ -26,14 +23,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
                 android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
 
                 <TextView
                     android:id="@+id/forecast_detail_fragment_item_high_textview"
@@ -49,9 +48,9 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -72,26 +71,21 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/forecast_detail_fragment_item_humidity_textview"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="48%"/>
+        <TextView
+            android:id="@+id/forecast_detail_fragment_item_wind_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6 km/h NW"/>
+        <TextView
+            android:id="@+id/forecast_detail_fragment_item_pressure_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1014"/>
 
-            <TextView
-                android:id="@+id/forecast_detail_fragment_item_humidity_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="48%"/>
-            <TextView
-                android:id="@+id/forecast_detail_fragment_item_wind_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="6 km/h NW"/>
-            <TextView
-                android:id="@+id/forecast_detail_fragment_item_pressure_textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1014"/>
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>
