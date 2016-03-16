@@ -77,20 +77,26 @@ public class ForecastDetailActivityFragment extends Fragment implements LoaderMa
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_fragment_forecast_detail, menu);
+        if(menu.findItem(R.id.action_show_on_map) == null) {
 
-        // Locate MenuItem with ShareActionProvider
-        MenuItem shareItem = menu.findItem(R.id.action_share);
+            inflater.inflate(R.menu.menu_fragment_forecast_detail, menu);
 
-        // Fetch and store ShareActionProvider
-        mShareActionProvider = new ShareActionProvider(getActivity());
+            // Locate MenuItem with ShareActionProvider
+            MenuItem shareItem = menu.findItem(R.id.action_share);
 
-        if (mShareActionProvider != null) {
-            mShareActionProvider.setShareIntent(createShareIntent());
-            MenuItemCompat.setActionProvider(shareItem,mShareActionProvider);
+            // Fetch and store ShareActionProvider
+            mShareActionProvider = new ShareActionProvider(getActivity());
+
+            if (mShareActionProvider != null) {
+                mShareActionProvider.setShareIntent(createShareIntent());
+                MenuItemCompat.setActionProvider(shareItem,mShareActionProvider);
+            } else {
+                Log.d(CLASS_TAG, "Share Action Provider is Null");
+            }
         } else {
-            Log.d(CLASS_TAG, "Share Action Provider is Null");
+            // Load tablet specific item without overloading with same items
         }
+
     }
 
     @Override

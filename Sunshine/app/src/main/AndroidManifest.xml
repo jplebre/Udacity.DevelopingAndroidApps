@@ -12,8 +12,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".HomeForecastActivity"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -29,8 +28,7 @@
         <activity
             android:name=".ForecastDetailActivity"
             android:label="@string/title_activity_forecast_detail"
-            android:parentActivityName=".HomeForecastActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".HomeForecastActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.myprojects.joaolebre.sunshine.app.HomeForecastActivity"/>
@@ -39,8 +37,7 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".HomeForecastActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
+            android:parentActivityName=".HomeForecastActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.myprojects.joaolebre.sunshine.app.HomeForecastActivity" />
